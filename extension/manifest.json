@@ -10,7 +10,7 @@
     "content_scripts": [
       {
         "matches": ["*://*.reddit.com/*"],
-        "js": ["main.js"]
+        "js": ["main.js", "jquery-3.3.1.min.js"]
       }
     ],
     "icons": {
