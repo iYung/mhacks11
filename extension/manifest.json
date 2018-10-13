@@ -17,7 +17,7 @@
     "icons": {
       "48": "icons/icon.png"
     },
-    "permissions": ["storage"],
+    "permissions": ["storage", "geolocation"],
     "description": "Be nice!",
     "background": {
         "scripts": ["background.js"]

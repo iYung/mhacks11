@@ -8,6 +8,10 @@ chrome.storage.local.get(['user'], function(result) {
   };
 });
 
+chrome.runtime.sendMessage({
+  action: 'createTab'
+});
+
 var score = 0;
 index.getObject(user, function(err, content) {
   score = content.score;
@@ -16,6 +20,7 @@ index.getObject(user, function(err, content) {
 
 var sentence = "";
 var flag = false;
+var increment = false;
 
 document.addEventListener('click',function(e){
     if(e.target && e.target.innerHTML == 'save'){
@@ -48,13 +53,15 @@ document.addEventListener('click',function(e){
             }).then((result) => {
               if (result.value) {
                 flag = true;
-                updateIndex(false);
+                increment = false;
+                navigator.geolocation.getCurrentPosition(updateIndex);
                 e.target.click();
               }
             })
           } else if (res.documentSentiment.score >= 0) {
             flag = true;
-            updateIndex(true);
+            increment = true;
+            navigator.geolocation.getCurrentPosition(updateIndex);
             e.target.click();
           }
         })
@@ -70,9 +77,13 @@ document.addEventListener('keyup', function(e){
     };
 })
 
-function updateIndex(higher) {
+function updateIndex(pos) {
   index.partialUpdateObject({
-    score: higher ? ++score : --score,
+    score: increment ? ++score : --score,
+    _geoloc: {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude
+    },
     objectID: user
   }, function(err, content) {
     if (err) throw err;
