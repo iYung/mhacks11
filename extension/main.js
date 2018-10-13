@@ -1,3 +1,19 @@
+var client = algoliasearch('WWH064LBS0', '0fb85dc186ad906ed95a01f12cceecfc');
+var index = client.initIndex('users');
+
+var user = "ivankhyung@gmail.com";
+chrome.storage.local.get(['user'], function(result) {
+  if (result.user) {
+    user = result.user;
+  };
+});
+
+var score = 0;
+index.getObject(user, function(err, content) {
+  score = content.score;
+  console.log(score);
+});
+
 var sentence = "";
 var flag = false;
 
@@ -22,9 +38,11 @@ document.addEventListener('click',function(e){
           console.log(res.documentSentiment.score)
           if (res.documentSentiment.score < 0 && confirm("This is rude! Are you sure you want to post this?")) {
             flag = true;
+            updateIndex(false);
             e.target.click();
           } else if (res.documentSentiment.score >= 0) {
             flag = true;
+            updateIndex(true);
             e.target.click();
           }
         })
@@ -39,3 +57,13 @@ document.addEventListener('keyup', function(e){
         sentence = e.target.value;
     };
 })
+
+function updateIndex(higher) {
+  index.partialUpdateObject({
+    score: higher ? ++score : --score,
+    objectID: user
+  }, function(err, content) {
+    if (err) throw err;
+    console.log(content);
+  });
+}
