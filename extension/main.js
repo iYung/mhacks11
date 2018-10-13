@@ -36,10 +36,22 @@ document.addEventListener('click',function(e){
         })
         .then(function(res) {
           console.log(res.documentSentiment.score)
-          if (res.documentSentiment.score < 0 && confirm("This is rude! Are you sure you want to post this?")) {
-            flag = true;
-            updateIndex(false);
-            e.target.click();
+          if (res.documentSentiment.score < 0) {
+            swal({
+              title: 'This post is rude',
+              text: "Are you sure you want to say this?",
+              imageUrl: 'https://media.tenor.com/images/b307cc45267bd8cc23ea083c53608241/tenor.gif',
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: "I don't care"
+            }).then((result) => {
+              if (result.value) {
+                flag = true;
+                updateIndex(false);
+                e.target.click();
+              }
+            })
           } else if (res.documentSentiment.score >= 0) {
             flag = true;
             updateIndex(true);
