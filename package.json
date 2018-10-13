@@ -18,6 +18,7 @@
   "homepage": "https://github.com/iYung/mhacks11#readme",
   "dependencies": {
     "@google-cloud/language": "^2.0.0",
+    "firebaseui": "^3.4.1",
     "http2": "^3.3.7",
     "request": "^2.88.0"
   }

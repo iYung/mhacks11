@@ -17,29 +17,46 @@ const btnLogin = document.getElementById('btnLogin');
 const btnSignUp = document.getElementById("btnSignUp");
 const btnLogout = document.getElementById('btnLogout');
 
-window.onload=function(){
-  document.addEventListener('DOMContentLoaded', function(){
+//document.addEventListener('DOMContentLoaded', function() {alert("good")});
+document.addEventListener('DOMContentLoaded', function(){
+if (btnLogin){
+  console.log("here");
+    btnLogin.addEventListener('click' , e => {
+      //check for real email 
+      const email = txtEmail.value;
+      const pass = txtPassword.value;
+      const auth = firebase.auth();
+      //sign in 
+      const promise = auth.signInWithEmailAndPassword(email, pass);
+      promise.catch(e => console.log(e.message));
+      });}
+
+     
+   if (btnSignUp){
   btnSignUp.addEventListener('click' , e => {
+   
     //check for real email 
+    console.log("clicked Signup");
     const email = txtEmail.value;
     const pass = txtPassword.value;
     const auth = firebase.auth();
-    //sign in 
-    const promise = auth.createUserWithEmailAndPassword(email,password);
+   
+    //sign up
+    const promise = auth.createUserWithEmailAndPassword(email, pass);
     promise.catch(e => console.log(e.message));
     promise 
       .then(user => console.log(user))
       .catch(e => console.log(e.message));
-    });});
+    });}
     
 
-    document.addEventListener('DOMContentLoaded', function(){
+    if(btnLogout){
     btnLogout.addEventListener('click', e => {
       firebase.auth().signOut();
-    });});
+    });}
     
     //realtime authenticaiton listener
-    document.addEventListener('DOMContentLoaded', function(){
+    
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
         console.log(firebaseUser);
@@ -47,8 +64,10 @@ window.onload=function(){
       }
       else {
         console.log("not logged in");
-        btnLogout.classList.add('hide')
+        btnLogout.classList.add('hide');
+        console.log("not null");
       }
-    });});
-}
+    });
+  });
+
 
