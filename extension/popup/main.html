@@ -1,5 +1,46 @@
 <html>
+    <head>
+            <link rel="manifest" href="manifest.json">
+            <script src="https://www.gstatic.com/firebasejs/5.0/firebase.js"></script>
+            <script src="config.js"></script>
+            <script src="popup.js"></script>
+            <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+            <link rel="stylesheet" href ="styles.css">
+            <script src="dist/firebaseui.js"></script>
+            <link type="text/css" rel="stylesheet" href="dist/firebaseui.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script>
+            // Initialize Firebase
+            var config = {
+              apiKey: "AIzaSyBo-J3s2LcCqzSCRxkkEzkKaoLEihQlAwU",
+              authDomain: "mhacks11-c8e81.firebaseapp.com",
+              databaseURL: "https://mhacks11-c8e81.firebaseio.com",
+              projectId: "mhacks11-c8e81",
+              storageBucket: "mhacks11-c8e81.appspot.com",
+              messagingSenderId: "354599152461"
+            };
+            firebase.initializeApp(config);
+          </script>
+    </head>
     <body>
+        <div class = "container">
+            <input id = "txtEmail" type ="email" placeholder = "Email">
+
+            <input id = "txtPassword" type = "password" placeholder = "Password">
+
+            <button id ="btnLogin" class = "btn btn-secondary">
+                log in
+            </button>
+
+            <button id ="btnSignUp" class = "btn btn-secondary">
+                Sign Up
+            </button>
+
+            <button id ="btnLogout" class = "btn btn-action hide">
+                log out
+            </button>
+        </div>
         
+        <script src = "popup.js"></script>
     </body>
 </html>
