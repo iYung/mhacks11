@@ -31,7 +31,7 @@ if (btnLogin){
       promise.catch(e => console.log(e.message));
 
       // Save it using the Chrome extension storage API.
-      chrome.storage.sync.set({'value': email}, function() 
+      chrome.storage.local.set({'user': email}, function() 
       {
         // Notify that we saved.
         console.log('Settings saved');

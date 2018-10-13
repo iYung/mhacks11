@@ -2,7 +2,7 @@ var client = algoliasearch('WWH064LBS0', '0fb85dc186ad906ed95a01f12cceecfc');
 var index = client.initIndex('users');
 
 var user = "ivankhyung@gmail.com";
-chrome.storage.local.get(['user'], function(result) {
+chrome.storage.local.get('user', function(result) {
   if (result.user) {
     user = result.user;
   };
