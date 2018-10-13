@@ -2,14 +2,20 @@
     <head>
             <link rel="manifest" href="manifest.json">
             <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
-            
+            <script src="jquery.min.js"></script>
             <link rel="stylesheet" href ="styles.css">
             <script src="firebaseui.js"></script>
             <link type="text/css" rel="stylesheet" href="firebaseui.css" />
+            <script src="../algoliasearch.min.js"></script>
+            <script src ="./page/page.js"> </script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <div class = "container">
+                <div class ="welcome">
+                        <h3>Welcome User!</h3>
+                    </div>
+                    
             <input id = "txtEmail" type ="email" placeholder = "Email">
 
             <input id = "txtPassword" type = "password" placeholder = "Password">
@@ -21,11 +27,13 @@
             <button id ="btnSignUp" class = "btn btn-secondary">
                 Sign Up
             </button>
+          
 
             <button id ="btnLogout" class = "btn btn-action hide">
                 log out
             </button>
+            <script src="popup.js"></script>
         </div>
-        <script src="popup.js"></script>
+        
     </body>
 </html>

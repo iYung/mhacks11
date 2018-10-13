@@ -29,6 +29,13 @@ if (btnLogin){
       //sign in 
       const promise = auth.signInWithEmailAndPassword(email, pass);
       promise.catch(e => console.log(e.message));
+
+      // Save it using the Chrome extension storage API.
+      chrome.storage.sync.set({'value': email}, function() 
+      {
+        // Notify that we saved.
+        console.log('Settings saved');
+      });
       });}
 
      
@@ -47,6 +54,13 @@ if (btnLogin){
     promise 
       .then(user => console.log(user))
       .catch(e => console.log(e.message));
+
+      chrome.storage.local.set({'user': email}, function() 
+      {
+        // Notify that we saved.
+        console.log('Settings saved');
+      });
+
     });}
     
 
@@ -59,8 +73,64 @@ if (btnLogin){
     
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
-        console.log(firebaseUser);
-        btnLogout.classList.remove('hide');
+        //console.log(firebaseUser);
+        //btnLogout.classList.remove('hide');
+        console.log("function called");
+        
+        var b = document.getElementsByTagName("body")[0];
+        var html = b.parentNode
+        b.parentNode.removeChild(b);
+        var newBody = document.createElement("body");
+        html.appendChild(newBody);
+        console.log("function done");
+
+        chrome.storage.local.get("user", function(result) {
+          user = result.user;
+          console.log(user + "  hi there");
+          getName = user;
+        var name= document.createTextNode(getName);
+        p.appendChild(t);
+        welcome.appendChild(p); 
+        welcome.appendChild(name) ;
+        mainDiv.appendChild(welcome);
+        })
+
+        var mainDiv = document.createElement("div");
+        newBody.appendChild(mainDiv);
+        var welcome = document.createElement("h3");
+        var p = document.createElement("p");
+        var t = document.createTextNode("Welcome back!");       // Create a text node
+        
+        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+      
+        var nice = document.createElement('h2')
+        
+        var NicenessScore = 5;
+        var dispNiceness= document.createTextNode("Niceness Rating:  " + NicenessScore);
+        nice.appendChild(dispNiceness);
+        mainDiv.appendChild(nice);
+        var dogPic = document.createElement("img");
+        if (NicenessScore > 0)
+        {
+        dogPic.src = "https://i.imgur.com/rG3DP0P.gif";
+        //var src = document.getElementById("header");
+        
+        }
+        else if (NicenessScore< 0) {
+          dogPic.src = "https://i.imgur.com/NY38nL2.gif";
+        }
+        else 
+        {
+          dogPic.src = "https://i.imgur.com/FjgwkLp.gifv";
+        }
+        mainDiv.appendChild(dogPic);
+        var seeMore = document.createElement('a');
+        seeMore.href = "https://iyung.github.io/mhacks11map/";
+        seeMore.target = "_blank";
+        seeMore.classList.add("links")
+        var seeMoreText = document.createTextNode("see more");
+        seeMore.appendChild(seeMoreText);
+        mainDiv.appendChild(seeMore);
       }
       else {
         console.log("not logged in");
@@ -69,5 +139,3 @@ if (btnLogin){
       }
     });
   });
-
-
