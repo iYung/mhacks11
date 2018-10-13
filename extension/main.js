@@ -10,7 +10,9 @@ chrome.storage.local.get('user', function(result) {
 
 var score = 0;
 index.getObject(user, function(err, content) {
-  score = content.score;
+  if (content) {
+    score = content.score;
+  } 
 });
 
 var isNewPost = window.location.href.includes("/submit");

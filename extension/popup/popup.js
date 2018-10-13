@@ -1,3 +1,6 @@
+var client = algoliasearch('WWH064LBS0', '0fb85dc186ad906ed95a01f12cceecfc');
+var index = client.initIndex('users');
+
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyBo-J3s2LcCqzSCRxkkEzkKaoLEihQlAwU",
@@ -55,11 +58,16 @@ if (btnLogin){
       .then(user => console.log(user))
       .catch(e => console.log(e.message));
 
-      chrome.storage.local.set({'user': email}, function() 
-      {
-        // Notify that we saved.
-        console.log('Settings saved');
+    chrome.storage.local.set({'user': email}, function() 
+    {
+      console.log('Settings saved');
+      index.addObject({
+        objectID: email,
+        score: 0
+      }, function(err, content) {
+        console.log('objectID=' + content.objectID);
       });
+    });
 
     });}
     
