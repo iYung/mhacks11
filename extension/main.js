@@ -8,22 +8,21 @@ chrome.storage.local.get(['user'], function(result) {
   };
 });
 
-chrome.runtime.sendMessage({
-  action: 'createTab'
-});
-
 var score = 0;
 index.getObject(user, function(err, content) {
   score = content.score;
-  console.log(score);
 });
 
+var isReddit = window.location.hostname == "www.reddit.com";
+var isNewPost = window.location.href.includes("/submit");
+
+var title = "";
 var sentence = "";
 var flag = false;
 var increment = false;
 
 document.addEventListener('click',function(e){
-    if(e.target && e.target.innerHTML == 'save'){
+    if(isReddit && !isNewPost && e.target && e.target.innerHTML == 'save'){
       if (!flag) {
         e.preventDefault();
         var data = {
@@ -68,12 +67,55 @@ document.addEventListener('click',function(e){
       } else {
         flag = false
       }
+    } else if  (isReddit && isNewPost && e.target && e.target.innerHTML == 'submit') {
+      var img = document.getElementsByClassName("uploaded-preview-image")[0];
+      console.log(img.height);
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var context = canvas.getContext("2d");
+      context.drawImage(img, 0 , 0, img.width, img.height);
+      document.getElementsByClassName("roundfield info-notice")[0].appendChild(canvas);
+      var pic = canvas.toDataURL().replace(/^data:image\/(png|jpg);base64,/, "");
+      var data = {
+        "inputs": [
+          {
+            "data": {
+              "image": {
+                "base64": pic
+              }
+            }
+          }
+        ]
+      }
+      fetch("https://api.clarifai.com/v2/models/d16f390eb32cad478c7ae150069bd2c6/outputs", {
+            method: "POST", 
+            headers: new Headers({
+              'Authorization': 'Key bc645bdbbc404f009fc4e22726a1e70d', 
+              'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(data)
+        }).then(function(response) {
+          return response.json();
+        })
+        .then(function(res) {
+          console.log(res);
+        });
+      e.preventDefault();
     }
 })
 
 document.addEventListener('keyup', function(e){
-    if (e.target && e.target.localName == 'textarea') {
+    if (isReddit && !isNewPost && e.target && e.target.localName == 'textarea') {
+      sentence = e.target.value;
+    } else if (isReddit && isNewPost && e.target) {
+      if (e.target.getAttribute("name") == "title") {
+        title = e.target.value;
+        console.log(title);
+      } else if (e.target.getAttribute("name") == "text") {
         sentence = e.target.value;
+        console.log(sentence);
+      }
     };
 })
 
