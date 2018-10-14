@@ -6,32 +6,33 @@
             <link rel="stylesheet" href ="styles.css">
             <script src="firebaseui.js"></script>
             <link type="text/css" rel="stylesheet" href="firebaseui.css" />
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
             <script src="../algoliasearch.min.js"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <div class = "container">
-                <div class ="welcome">
-                        <h3>Welcome User!</h3>
+            <div class="card first">
+                    <div class="card-image">
+                            <img src="https://i.imgur.com/pk5j71b.gif" class="img-responsive">
+                          </div>
+                    <div class="card-header">
+                      <div class="card-title h5">Welcome</div>
+                      <div class="card-subtitle text-gray">Prepare to be Pawsitive!</div>
                     </div>
-                    
-            <input id = "txtEmail" type ="email" placeholder = "Email">
+                    <div class="card-body">
+                            <input id = "txtEmail" type ="email" placeholder = "Email">
 
-            <input id = "txtPassword" type = "password" placeholder = "Password">
-
-            <button id ="btnLogin" class = "btn btn-secondary">
-                log in
-            </button>
-
-            <button id ="btnSignUp" class = "btn btn-secondary">
-                Sign Up
-            </button>
-          
-
-            <button id ="btnLogout" class = "btn btn-action hide">
-                log out
-            </button>
+                            <input id = "txtPassword" type = "password" placeholder = "Password">
+                    </div>
+                    <div class="card-footer">
+                      <button class="btn btn-primary" id ="btnLogin">Login</button>
+                      <button class="btn btn-primary" id ="btnSignUp">Sign up</button>
+                    </div>
+                  </div>
+            
             <script src="popup.js"></script>
         </div>
         

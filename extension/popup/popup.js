@@ -16,6 +16,7 @@ firebase.initializeApp(config);
 //declare function for getting from algolia
 var reddit ="Hi";
 var user = ""; //default user 
+var Score = 0;
 
 function updateIndex() {
   index.partialUpdateObject({
@@ -107,108 +108,118 @@ document.addEventListener('DOMContentLoaded', function(){
         html.appendChild(newBody);
         console.log("function done");
 
-        // get user name from login info that was saved to chrome 
-        chrome.storage.local.get("user", function(result) {
-          user = result.user;
-          console.log(user + "  hi there");
-          getName = user;
-        var name= document.createTextNode(getName);
-        p.appendChild(t);
-        welcome.appendChild(p); 
-        welcome.appendChild(name) ;
-        mainDiv.appendChild(welcome);
-        })
+        //define card
+        var card = document.createElement("div");
+        card.setAttribute("class", "card first");
+        newBody.appendChild(card);
+
+        var cardImg = document.createElement("div");
+        cardImg.setAttribute("class", "card-image");
+        card.appendChild(cardImg);
+
+        var doggiePic = document.createElement("img");
+        doggiePic.setAttribute("src", "");
+        doggiePic.setAttribute("class", "img-responsive");
+        doggiePic.setAttribute("id", "doggiePic")
+        cardImg.appendChild(doggiePic);
+
         // welcome back message
         var mainDiv = document.createElement("div");
-        newBody.appendChild(mainDiv);
-        var welcome = document.createElement("h3");
-        var p = document.createElement("p");
-        var t = document.createTextNode("Welcome back!");       // Create a text node
-        
-      
-        
-        // get and display score for user in pop up
-        var nice = document.createElement('h2')
-        var Score = 0; //default zero 
-        chrome.storage.local.get('user', function(result) {
-          if (result.user) {
+        mainDiv.setAttribute("class", "card-header");
+
+        var mapLink = document.createElement("a");
+        mapLink.setAttribute("href", "https://iyung.github.io/mhacks11map/");
+        mapLink.setAttribute("target", "_blank");
+        mapLink.setAttribute("class", "float-right");
+        mapLink.innerHTML = "See local ratings";
+        mainDiv.appendChild(mapLink);
+
+        var mainTitle = document.createElement("div");
+        mainTitle.setAttribute("class", "card-title h5");
+        mainTitle.innerHTML = "Welcome back!"
+        mainDiv.appendChild(mainTitle);
+
+        // get user name from login info that was saved to chrome 
+        chrome.storage.local.get("user", function(result) {
+
+          console.log(user);
           user = result.user;
+
+          var userTitle = document.createElement("div");
+
+          userTitle.setAttribute("class", "card-subtitle text-gray");
+          userTitle.innerHTML = user;
+          
+          mainDiv.appendChild(userTitle);
+          card.appendChild(mainDiv);
+
+          var cardBody = document.createElement("div");
+          cardBody.setAttribute("class", "card-body");
+
           index.getObject(user, function(err, content) {
             if (content) {
-             Score = content.score;
-             var dispNiceness= document.createTextNode("Niceness Rating:  " + Score);
-          nice.appendChild(dispNiceness);
-          mainDiv.appendChild(nice);
-          var dogPic = document.createElement("img");
-          if (Score > 0)
-          {
-          dogPic.src = "https://i.imgur.com/rG3DP0P.gif";        
-          }
-          else if (Score< 0) {
-            dogPic.src = "https://i.imgur.com/NY38nL2.gif";
-          }
-          else 
-          {
-            dogPic.src = "https://i.imgur.com/FjgwkLp.gifv";
-          }
-          mainDiv.appendChild(dogPic);
-          // leading to map 
-          var seeMore = document.createElement('a');
-          seeMore.href = "https://iyung.github.io/mhacks11map/";
-          seeMore.target = "_blank";
-          seeMore.classList.add("links")
-          var seeMoreText = document.createTextNode("see more");
-          seeMore.appendChild(seeMoreText);
-          mainDiv.appendChild(seeMore);
+              reddit = content.reddit;
+              Score = content.score;
+              cardBody.innerHTML = "Pawsitivity Rating: " + Score;
+              card.appendChild(cardBody);
+              var chosenImg ="https://i.imgur.com/FjgwkLp.gifv";
+              if (Score>5) {
+                chosenImg = "https://i.imgur.com/rG3DP0P.gif"
+              } else if (Score<0) {
+                chosenImg = "https://i.imgur.com/NY38nL2.gif";
+              }
+              document.getElementById("doggiePic").setAttribute("src", chosenImg);
               
+              cardBody.appendChild(document.createElement("br"));
 
-            //Reddit User name Textbox 
-        var txtRedditUser = document.createElement('input');
-        txtRedditUser.type = "text";
-        txtRedditUser.id = "redditUser"
-        txtRedditUser.placeholder = "Reddit User Name";
-        mainDiv.appendChild(txtRedditUser);
-        index.getObject(user, function(err, content) {
-          if (content) {
-            console.log(content + "  content");
-            reddit = content.reddit;
-            console.log(reddit + "   before filling in txt box");
-            txtRedditUser.value = reddit;
-          } 
+              var formRow = document.createElement("div");
+              formRow.setAttribute("class", "columns");
+              var leftCol = document.createElement("div");
+              leftCol.setAttribute("class", "column col-9");
+              var rightCol = document.createElement("div");
+              rightCol.setAttribute("class", "column col-3");
+
+              var txtRedditUser = document.createElement('input');
+              txtRedditUser.setAttribute("class","form-input");
+              txtRedditUser.type = "text";
+              txtRedditUser.id = "redditUser"
+              txtRedditUser.placeholder = "Reddit User Name";
+              txtRedditUser.value = reddit;
+              leftCol.appendChild(txtRedditUser);
+
+              var btnRedditSave = document.createElement("button");
+              btnRedditSave.setAttribute("class","btn btn-primary fluid");
+              btnRedditSave.textContent = "Save";
+              rightCol.appendChild(btnRedditSave);
+
+              formRow.appendChild(leftCol);
+              formRow.appendChild(rightCol);
+
+              cardBody.appendChild(formRow);
+
+              btnRedditSave.addEventListener('click', e => {
+                reddit = txtRedditUser.value;
+                console.log(reddit);
+                updateIndex();
+                console.log(reddit + " after calling function");
+              });
+
+              if(reddit != ""){
+
+                var footer = document.createElement("div");
+                footer.setAttribute("class", "card-footer");
+                var history = document.createElement("a");
+                history.setAttribute("href", "../page/page.html");
+                history.setAttribute("target", "_blank");
+                history.innerHTML = "See recent posts";
+
+                footer.appendChild(history);
+                card.appendChild(footer);
+
+              }
+            }
+          })
         });
-
-        //Reddit User textbox Save button 
-        var btnRedditSave = document.createElement("button");
-        btnRedditSave.textContent = "save";
-        mainDiv.appendChild(btnRedditSave);
-
-        //event listener for reddit save button
-        
-        btnRedditSave.addEventListener('click', e => {
-          reddit = txtRedditUser.value;
-          console.log(reddit);
-          updateIndex();
-          console.log(reddit + " after calling function");
-        });
-        //leading to history 
-        if(reddit != ""){
-        var seeHist = document.createElement('a');
-        seeHist.href = "../page/page.html";
-        seeHist.target = "_blank";
-        seeHist.classList.add("links")
-        var seeHistText = document.createTextNode("see History");
-        seeHist.appendChild(seeHistText);
-        mainDiv.appendChild(seeHist);
-        }
-             }
-             });
-         }; 
-        });  
       }
-      else {
-        console.log("not logged in");
-        btnLogout.classList.add('hide');
-        console.log("not null");
-      }
-    });
+    })
   });
