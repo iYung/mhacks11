@@ -24,7 +24,6 @@ function updateIndex() {
     objectID: user
   }, function(err, content) {
     if (err) throw err;
-    console.log(content);
   });
 }
 
@@ -33,19 +32,19 @@ const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
 const btnLogin = document.getElementById('btnLogin');
 const btnSignUp = document.getElementById("btnSignUp");
-const btnLogout = document.getElementById('btnLogout');
 
 //login authentication 
 //wrapped around even listener to ensure page loads first 
 document.addEventListener('DOMContentLoaded', function(){
 if (btnLogin){
-  console.log("here");
+  console.log("1");
     btnLogin.addEventListener('click' , e => {
       //check for real email 
       const email = txtEmail.value;
       const pass = txtPassword.value;
       const auth = firebase.auth();
       //sign in 
+      console.log(email);
       const promise = auth.signInWithEmailAndPassword(email, pass);
       promise.catch(e => console.log(e.message));
 
@@ -75,29 +74,25 @@ if (btnLogin){
       .then(user => console.log(user))
       .catch(e => console.log(e.message));
 
+      console.log(email);
+
       chrome.storage.local.set({'user': email}, function() 
       {
         // Notify that we saved.
         console.log('Settings saved');
       });
-
+      index.addObject(
+        {score:0,
+        objectID: email}, function(err, content) {
+        console.log(content);})
     });
   }
 });
-    
-document.addEventListener('DOMContentLoaded', function(){ 
-    if(btnLogout){
-    btnLogout.addEventListener('click', e => {
-      firebase.auth().signOut();
-    });}
-  });
     
     //realtime authenticaiton listener
  document.addEventListener('DOMContentLoaded', function(){ 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
-        //console.log(firebaseUser);
-        //btnLogout.classList.remove('hide');
         console.log("function called");
         
         // clear body to start next page 
@@ -157,23 +152,25 @@ document.addEventListener('DOMContentLoaded', function(){
           cardBody.setAttribute("class", "card-body");
 
           index.getObject(user, function(err, content) {
+            if (err) {
+              cardBody.innerHTML = "Your account has bben created! Please close and reopen the popup.";
+              card.appendChild(cardBody);
+            }
             if (content) {
-              reddit = content.reddit;
+              reddit = content.reddit ? content.reddit : "";
               Score = content.score;
               cardBody.innerHTML = "Pawsitivity Rating: " + Score;
               card.appendChild(cardBody);
-              var chosenImg ="https://i.imgur.com/FjgwkLp.gifv";
+              var chosenImg ="https://i.imgur.com/FjgwkLp.gif";
               if (Score>5) {
                 chosenImg = "https://i.imgur.com/rG3DP0P.gif"
               } else if (Score<0) {
                 chosenImg = "https://i.imgur.com/NY38nL2.gif";
               }
               document.getElementById("doggiePic").setAttribute("src", chosenImg);
-              
-              cardBody.appendChild(document.createElement("br"));
 
               var formRow = document.createElement("div");
-              formRow.setAttribute("class", "columns");
+              formRow.setAttribute("class", "columns space-top");
               var leftCol = document.createElement("div");
               leftCol.setAttribute("class", "column col-9");
               var rightCol = document.createElement("div");
