@@ -160,15 +160,7 @@ document.addEventListener('DOMContentLoaded', function(){
           var seeMoreText = document.createTextNode("see more");
           seeMore.appendChild(seeMoreText);
           mainDiv.appendChild(seeMore);
-            //leading to history 
-            var seeHist = document.createElement('a');
-            seeHist.href = "https://iyung.github.io/mhacks11map/";
-            seeHist.target = "_blank";
-            seeHist.classList.add("links")
-            var seeHistText = document.createTextNode("see History");
-            seeHist.appendChild(seeHistText);
-            mainDiv.appendChild(seeHist);
-  
+              
 
             //Reddit User name Textbox 
         var txtRedditUser = document.createElement('input');
@@ -198,6 +190,16 @@ document.addEventListener('DOMContentLoaded', function(){
           updateIndex();
           console.log(reddit + " after calling function");
         });
+        //leading to history 
+        if(reddit != ""){
+        var seeHist = document.createElement('a');
+        seeHist.href = "../page/page.html";
+        seeHist.target = "_blank";
+        seeHist.classList.add("links")
+        var seeHistText = document.createTextNode("see History");
+        seeHist.appendChild(seeHistText);
+        mainDiv.appendChild(seeHist);
+        }
              }
              });
          }; 
