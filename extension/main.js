@@ -2,17 +2,21 @@ var client = algoliasearch('WWH064LBS0', '0fb85dc186ad906ed95a01f12cceecfc');
 var index = client.initIndex('users');
 
 var user = "ivankhyung@gmail.com";
+var score = 0;
+
+// chrome.runtime.sendMessage({
+//   action: 'createTab'
+// });
+
 chrome.storage.local.get('user', function(result) {
   if (result.user) {
     user = result.user;
+    index.getObject(user, function(err, content) {
+      if (content) {
+        score = content.score;
+      } 
+    });
   };
-});
-
-var score = 0;
-index.getObject(user, function(err, content) {
-  if (content) {
-    score = content.score;
-  } 
 });
 
 var isNewPost = window.location.href.includes("/submit");
